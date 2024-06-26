@@ -1,6 +1,6 @@
 {
-    "prefabPath": "",
-    "jsonDataPath": "D:/Z_CHJ/MyProjects/ThirdPerson_Combat/ThirdPersonCombat/Assets",
+    "prefabPath": "Assets",
+    "jsonDataPath": "Assets",
     "saveOnPlay": false,
     "editMode": false,
     "packageDefinePairs": []
