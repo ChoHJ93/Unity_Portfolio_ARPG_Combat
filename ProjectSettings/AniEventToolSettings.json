@@ -2,6 +2,13 @@
     "prefabPath": "Assets",
     "jsonDataPath": "Assets",
     "saveOnPlay": false,
-    "editMode": false,
-    "packageDefinePairs": []
+    "editMode": true,
+    "packageDefinePairs": [
+        {
+            "packageName": "com.cysharp.unitask",
+            "defineSymbol": "UNITASK",
+            "isInstalled": false,
+            "isEnable": true
+        }
+    ]
 }
