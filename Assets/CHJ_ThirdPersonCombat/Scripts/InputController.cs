@@ -18,8 +18,8 @@ public class InputController : MonoBehaviour
     private Dictionary<string, EInputKey> _dicInputKey = new Dictionary<string, EInputKey>();
 
     //for Invoke on performed event
-    private EventCommonInput _eventMoveInput; 
-    private EventCommonInput _eventLookInput; 
+    private EventMoveInput _eventMoveInput; 
+    private EventLookInput _eventLookInput; 
 
     private void Awake()
     {
@@ -84,22 +84,53 @@ public class InputController : MonoBehaviour
 
     private void BindActionToEvent(int index, InputAction action, EInputKey eInputKey) 
     {
-        if (eInputKey == EInputKey.Move || eInputKey == EInputKey.Look)
+        switch (eInputKey)
         {
-            action.performed += OnInputEventCalled;
-            action.canceled += OnInputEventCalled;
+            case EInputKey.Move:
+                {
+                    _eventMoveInput = new EventMoveInput(Vector2.zero, EInputState.None);
+                    action.performed += OnMoveInputCalled;
+                    action.canceled += OnMoveInputCalled;
+                }
+                break;
+
+            case EInputKey.Look:
+                {
+                    _eventLookInput = new EventLookInput(Vector2.zero, EInputState.None);
+                    action.performed += OnLookInputCalled;
+                    action.canceled += OnLookInputCalled;
+                }
+                break;
+
+            default:
+                {
+                    bool hasHoldAction = _isHoldActions[index];
+
+                    if (hasHoldAction)
+                        action.performed += OnInputEventCalled;
+
+                    action.started += OnInputEventCalled;
+                    action.canceled += OnInputEventCalled;
+                }
+                break;
         }
-        else
-        {
-            bool hasHoldAction = _isHoldActions[index];
+    }
+    private void OnMoveInputCalled(InputAction.CallbackContext context)
+    {
+        Vector2 value = context.ReadValue<Vector2>();
+        EInputState inputState = GetInputState(context);
 
-            if (hasHoldAction)
-                action.performed += OnInputEventCalled;
+        _eventMoveInput.SetMoveInput(value, inputState);
+        EventManager.Instance.ExecuteEvent(_eventMoveInput);
+    }
 
-            action.started += OnInputEventCalled;
-            action.canceled += OnInputEventCalled;
-        }
+    private void OnLookInputCalled(InputAction.CallbackContext context) 
+    {
+        Vector2 value = context.ReadValue<Vector2>();
+        EInputState inputState = GetInputState(context);
 
+        _eventLookInput.SetLookInput(value, inputState);
+        EventManager.Instance.ExecuteEvent(_eventLookInput);
     }
 
     private void OnInputEventCalled(InputAction.CallbackContext context) 
