@@ -4,7 +4,6 @@ using UnityEngine;
 using System;
 using System.Linq;
 using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.UI;
 
 [RequireComponent(typeof(PlayerInput))]
 public class InputController : MonoBehaviour
@@ -17,6 +16,8 @@ public class InputController : MonoBehaviour
     private int _devieIndex;
     private Dictionary<string, EInputKey> _dicInputKey = new Dictionary<string, EInputKey>();
 
+    private bool _isCursorLocked = false;
+
     //for Invoke on performed event
     private EventMoveInput _eventMoveInput; 
     private EventLookInput _eventLookInput; 
@@ -24,6 +25,15 @@ public class InputController : MonoBehaviour
     private void Awake()
     {
         Initialize();
+    }
+
+    private void OnApplicationFocus(bool focus)
+    {
+        if (_isCursorLocked == false)
+        { 
+            Cursor.lockState = CursorLockMode.Locked;
+            _isCursorLocked = true;
+        }
     }
 
     public void Initialize() 
@@ -86,6 +96,11 @@ public class InputController : MonoBehaviour
     {
         switch (eInputKey)
         {
+            case EInputKey.Menu:
+                {
+                    action.performed += OnMenuInputPerformed;
+                }
+                break;
             case EInputKey.Move:
                 {
                     _eventMoveInput = new EventMoveInput(Vector2.zero, EInputState.None);
@@ -148,9 +163,23 @@ public class InputController : MonoBehaviour
             return;
 
         EventCommonInput eventCommonInput = new EventCommonInput(key, inputState);
-        eventCommonInput.value = context.action.expectedControlType == "Vector2" ? context.ReadValue<Vector2>() : Vector2.zero;
+        //eventCommonInput.value = context.action.expectedControlType == "Vector2" ? context.ReadValue<Vector2>() : Vector2.zero;
 
         EventManager.Instance.ExecuteEvent(eventCommonInput);
+    }
+
+    private void OnMenuInputPerformed(InputAction.CallbackContext context) 
+    {
+        if (_isCursorLocked)
+        {
+            Cursor.lockState = CursorLockMode.None;
+            _isCursorLocked = false;
+        }
+        else
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            _isCursorLocked = true;
+        }
     }
 
     EInputState GetInputState(InputAction.CallbackContext _Context)
