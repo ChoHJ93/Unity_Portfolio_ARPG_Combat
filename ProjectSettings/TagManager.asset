@@ -11,11 +11,11 @@ TagManager:
   - 
   - Water
   - UI
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Player
+  - Monster
+  - Ground
+  - Wall
+  - Obstacles
   - 
   - 
   - 

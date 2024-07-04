@@ -4,15 +4,13 @@ using UnityEngine;
 
 public class Unit : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    private Vector2 _moveInput;
+
+    private void OnEnable()
     {
-        
     }
 
-    // Update is called once per frame
-    void Update()
+    private void OnDisable()
     {
-        
     }
 }

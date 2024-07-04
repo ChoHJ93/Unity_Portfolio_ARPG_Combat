@@ -23,6 +23,7 @@ public class CameraController : MonoBehaviour
     private bool _ignoreInput = false;
 
     private Transform FollowTarget => _virtualCamera.Follow;
+    public Transform CameraTr => _camera.transform;
 
     private void Awake()
     {

@@ -652,6 +652,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1170272893}
+  - component: {fileID: 1170272894}
   m_Layer: 0
   m_Name: FollowTarget
   m_TagString: Untagged
@@ -674,6 +675,26 @@ Transform:
   m_Children: []
   m_Father: {fileID: 2058824343}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1170272894
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1170272892}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5100369dbe26ee343896f04941377e90, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _target: {fileID: 1337985876}
+  _offset: {x: 0, y: 1, z: 0}
+--- !u!4 &1337985876 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6737329318927772567, guid: c5a9104d9e6c09743bd1f8430922fe4a,
+    type: 3}
+  m_PrefabInstance: {fileID: 6352334066708093296}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1601136998
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -772,6 +793,53 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 09aade0ecefd01e4b8f7661acf64f5c2, type: 3}
+--- !u!1 &1711923124
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1711923126}
+  - component: {fileID: 1711923125}
+  m_Layer: 0
+  m_Name: GameScene
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1711923125
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1711923124}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d203b6e9d54b7f24cbfb1e3426327a3d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cameraController: {fileID: 2058824344}
+  inputController: {fileID: 483065597}
+  playerUnit: {fileID: 6352334066708093297}
+--- !u!4 &1711923126
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1711923124}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1959666920
 GameObject:
   m_ObjectHideFlags: 0
@@ -908,11 +976,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: UnitPlayer
       objectReference: {fileID: 0}
-    - target: {fileID: 2047931523490816685, guid: c5a9104d9e6c09743bd1f8430922fe4a,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 6737329318927772567, guid: c5a9104d9e6c09743bd1f8430922fe4a,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -968,13 +1031,26 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c5a9104d9e6c09743bd1f8430922fe4a, type: 3}
+--- !u!114 &6352334066708093297 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4952148407022688345, guid: c5a9104d9e6c09743bd1f8430922fe4a,
+    type: 3}
+  m_PrefabInstance: {fileID: 6352334066708093296}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1151ff8ce28744a4d9b7750ca74848b2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 410087041}
   - {fileID: 832575519}
-  - {fileID: 6352334066708093296}
+  - {fileID: 1711923126}
   - {fileID: 1601136998}
-  - {fileID: 483065599}
   - {fileID: 2058824343}
+  - {fileID: 483065599}
+  - {fileID: 6352334066708093296}
