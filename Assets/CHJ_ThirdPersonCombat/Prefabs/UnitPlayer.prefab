@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 4952148407022688345}
   - component: {fileID: 906343138152124875}
   - component: {fileID: 8323878627355218159}
+  - component: {fileID: 2562471662379616731}
   m_Layer: 6
   m_Name: UnitPlayer
   m_TagString: Untagged
@@ -126,6 +127,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _moveSpeed: 5
   _rotationSmoothTime: 0.1
+--- !u!114 &2562471662379616731
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2047931523490816685}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 785369b171114984988bf02e81c92ee4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &2566231300001537248
 PrefabInstance:
   m_ObjectHideFlags: 0

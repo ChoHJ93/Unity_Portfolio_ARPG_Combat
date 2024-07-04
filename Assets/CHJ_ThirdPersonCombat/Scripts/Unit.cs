@@ -4,13 +4,20 @@ using UnityEngine;
 
 public class Unit : MonoBehaviour
 {
-    private Vector2 _moveInput;
+    private CharacterController _characterController;
+    private Animator _animator;
+    private UnitMovement _unitMovement;
+    private UnitAniEventController _aniEventController;
 
-    private void OnEnable()
+    public UnitMovement UnitMovement => _unitMovement;
+
+    private void Awake()
     {
+        _animator = GetComponent<Animator>();
+        _unitMovement = GetComponent<UnitMovement>();
+        _aniEventController = GetComponent<UnitAniEventController>();
     }
 
-    private void OnDisable()
-    {
-    }
+    #region Animation Control
+    #endregion
 }
