@@ -5,7 +5,6 @@ using UnityEngine;
 public class Unit : MonoBehaviour
 {
     private CharacterController _characterController;
-    private Animator _animator;
     private UnitMovement _unitMovement;
     private UnitAniEventController _aniEventController;
 
@@ -13,11 +12,12 @@ public class Unit : MonoBehaviour
 
     private void Awake()
     {
-        _animator = GetComponent<Animator>();
         _unitMovement = GetComponent<UnitMovement>();
         _aniEventController = GetComponent<UnitAniEventController>();
     }
 
-    #region Animation Control
-    #endregion
+    private void OnEnable()
+    {
+        
+    }
 }

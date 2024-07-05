@@ -14,6 +14,7 @@ public enum EInputKey
     Attack,
     Skill_01,
     Skill_02,
+    Dash,
     Interaction,
     Menu,
 }

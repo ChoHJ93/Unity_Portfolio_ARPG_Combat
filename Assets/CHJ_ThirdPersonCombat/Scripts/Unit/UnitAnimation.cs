@@ -42,7 +42,6 @@ public class UnitAnimation : MonoBehaviour
         }
 
         _moveInputValue = Mathf.SmoothDamp(_moveInputValue, moveInputValue, ref _moveAniBlendVelocity, 0.1f);
-
         _animator.SetFloat("MoveInputValue", _moveInputValue);
 
 
