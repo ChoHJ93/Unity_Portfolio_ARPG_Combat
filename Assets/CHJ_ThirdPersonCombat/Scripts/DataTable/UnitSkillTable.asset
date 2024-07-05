@@ -14,19 +14,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animator: {fileID: 9100000, guid: 99c6e878d2b8dda4f8dc2acbb2d6a49a, type: 2}
   skillDatas:
-  - inputKey: 3
+  - Id: 101
     aniStateName: 2Hand-Sword-Attack1
     coolTime: 0
-    damage: 0
-  - inputKey: 4
+    damage: 5
+    selectedStateIndex: 2
+  - Id: 102
     aniStateName: 2Hand-Sword-Attack8
-    coolTime: 3
-    damage: 0
-  - inputKey: 5
-    aniStateName: 
     coolTime: 0
-    damage: 0
-  - inputKey: 6
+    damage: 5
+    selectedStateIndex: 3
+  - Id: 201
+    aniStateName: None
+    coolTime: 3
+    damage: 10
+    selectedStateIndex: 0
+  - Id: 301
     aniStateName: 2Hand-Sword-DiveRoll-Forward1
     coolTime: 1
     damage: 0
+    selectedStateIndex: 4
