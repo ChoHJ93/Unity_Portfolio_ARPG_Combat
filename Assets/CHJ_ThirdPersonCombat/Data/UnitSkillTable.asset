@@ -18,19 +18,41 @@ MonoBehaviour:
     aniStateName: 2Hand-Sword-Attack1
     coolTime: 0
     damage: 5
+    nextSkillId: 102
     selectedStateIndex: 2
+    selectedNextSkillIndex: 0
   - Id: 102
     aniStateName: 2Hand-Sword-Attack8
     coolTime: 0
     damage: 5
+    nextSkillId: 103
     selectedStateIndex: 3
+    selectedNextSkillIndex: 0
+  - Id: 103
+    aniStateName: 2Hand-Sword-Attack7
+    coolTime: 1
+    damage: 0
+    nextSkillId: 104
+    selectedStateIndex: 5
+    selectedNextSkillIndex: 0
+  - Id: 104
+    aniStateName: 2Hand-Sword-Attack11
+    coolTime: 1
+    damage: 0
+    nextSkillId: 101
+    selectedStateIndex: 6
+    selectedNextSkillIndex: 0
   - Id: 201
     aniStateName: None
     coolTime: 3
     damage: 10
+    nextSkillId: 0
     selectedStateIndex: 0
+    selectedNextSkillIndex: 0
   - Id: 301
     aniStateName: 2Hand-Sword-DiveRoll-Forward1
     coolTime: 1
     damage: 0
+    nextSkillId: 0
     selectedStateIndex: 4
+    selectedNextSkillIndex: 0

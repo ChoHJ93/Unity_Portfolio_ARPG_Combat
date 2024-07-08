@@ -23,7 +23,11 @@ public class UnitMovement : MonoBehaviour
     private Transform CameraTr => GameManager.Instance.CameraController.CameraTr;
 
     public Vector2 MoveInput => _moveInput;
-
+    public bool IgnoreInput
+    {
+        private get => _ignoreInput;
+        set => _ignoreInput = value;
+    }
 
     private void Awake()
     {
@@ -45,7 +49,7 @@ public class UnitMovement : MonoBehaviour
         if(GameManager.Instance.IsGameStart == false)
             return;
 
-        if (_ignoreInput)
+        if (IgnoreInput)
         {
             _moveInput = Vector2.zero;
             return;

@@ -47,4 +47,12 @@ public class UnitAnimation : MonoBehaviour
 
         _lastMoveInput = isMoving;
     }
+
+    public void PlayAni(string aniStateName, bool crossFade = false, float transitionDuration = 0.1f) 
+    {
+        if (crossFade)
+            _animator.CrossFade(aniStateName, transitionDuration);
+        else
+            _animator.Play(aniStateName);
+    }
 }

@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 3222167841428933030}
   - component: {fileID: 4952148407022688345}
   - component: {fileID: 8323878627355218159}
+  - component: {fileID: 1197007186004629885}
   - component: {fileID: 2562471662379616731}
   - component: {fileID: 906343138152124875}
   m_Layer: 6
@@ -97,6 +98,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1151ff8ce28744a4d9b7750ca74848b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _unitSkillTable: {fileID: 0}
 --- !u!114 &8323878627355218159
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -111,6 +113,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _moveSpeed: 5
   _rotationSmoothTime: 0.1
+--- !u!114 &1197007186004629885
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2047931523490816685}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 709cd682fc514bc4eb7939ca31e0c12d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _unitSkillTable: {fileID: 11400000, guid: 9c40ad5707f73094cb8207076e67c9f0, type: 2}
+  _defaultSkillIdList: 6500000000000000000000002d010000
 --- !u!114 &2562471662379616731
 MonoBehaviour:
   m_ObjectHideFlags: 0
