@@ -2,8 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(Animator))]
-public class UnitAnimation : MonoBehaviour
+public class UnitAnimation
 {
     private Unit _unit;
     private Animator _animator;
@@ -12,18 +11,13 @@ public class UnitAnimation : MonoBehaviour
     private float _moveInputValue = 0f;
     private float _moveAniBlendVelocity = 0f;
 
-    private void Awake()
+    public UnitAnimation(Unit unit, Animator animator)
     {
-        _unit = GetComponent<Unit>();
-        _animator = GetComponent<Animator>();
+        _unit = unit;
+        _animator = animator;
     }
 
-    private void Update()
-    {
-        SetMoveAnimation(_unit.UnitMovement.MoveInput);
-    }
-
-    private void SetMoveAnimation(Vector2 moveInput)
+    public void SetMoveAnimation(Vector2 moveInput, bool forcePlay = false)
     {
         float moveInputValue = moveInput.normalized.magnitude;
         bool isMoving = moveInputValue > 0.01f;
@@ -33,7 +27,7 @@ public class UnitAnimation : MonoBehaviour
 
         if (_lastMoveInput != isMoving)
         {
-            if (isMoving)
+            if (isMoving && forcePlay)
                 _animator.SetTrigger("Move");
             else
                 _animator.ResetTrigger("Move");

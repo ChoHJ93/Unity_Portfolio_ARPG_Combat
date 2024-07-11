@@ -1,16 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using System.Linq;
 using CHJ;
-
 
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
 
 [RequireComponent(typeof(Unit))]
-[RequireComponent(typeof(UnitAnimation))]
 public class UnitSkill : MonoBehaviour
 {
     public readonly EInputKey[] CombatInputKeys = new EInputKey[] { EInputKey.Attack, EInputKey.Skill_01, EInputKey.Skill_02, EInputKey.Dash };
@@ -23,15 +22,19 @@ public class UnitSkill : MonoBehaviour
     private List<int> _defaultSkillIdList = new List<int>();
 
     private Unit _unit;
-    private UnitAnimation _unitAnimation;
-    public Dictionary<int, SkillData> _skillDataDic;
+    private Dictionary<int, SkillData> _skillDataDic;
+    private Dictionary<EInputKey, SkillData> _currentSkillDic;
+    private Dictionary<int, Coroutine> _coolingSkillDic;
+    private SkillData _currentSkill = null;
+    private bool _nextSkillFlag = false;
+    private UnitAnimation UnitAnimation => _unit.UnitAnimation;
 
-    public Dictionary<EInputKey, SkillData> _currentSkillDic;
+    public event UnityAction OnSkillStart;
+    public event UnityAction OnSkillEnd;
 
     private void Awake()
     {
         _unit = GetComponent<Unit>();
-        _unitAnimation = GetComponent<UnitAnimation>();
 
         _skillDataDic = new Dictionary<int, SkillData>();
 
@@ -39,12 +42,12 @@ public class UnitSkill : MonoBehaviour
         {
             foreach (var skillData in _unitSkillTable.SkillDatas)
             {
-                _skillDataDic.Add(skillData.Id, skillData);
+                _skillDataDic.Add(skillData.Id, skillData.Clone());
             }
         }
 
         _currentSkillDic = new Dictionary<EInputKey, SkillData>();
-        if(_defaultSkillIdList.IsNullOrEmpty() == false)
+        if (_defaultSkillIdList.IsNullOrEmpty() == false)
         {
             for (int i = 0; i < CombatInputKeys.Length; i++)
             {
@@ -55,6 +58,8 @@ public class UnitSkill : MonoBehaviour
                 _currentSkillDic.Add(CombatInputKeys[i], skillData);
             }
         }
+
+        _coolingSkillDic = new Dictionary<int, Coroutine>();
     }
 
     private void OnEnable()
@@ -69,15 +74,77 @@ public class UnitSkill : MonoBehaviour
 
     private void OnSkillInputCalled(EventCommonInput eventCommonInput)
     {
-        //check eventCommonInput.inputKey is one of CombatInputKeys
-        if (CombatInputKeys.Contains(eventCommonInput.inputKey) == false)
+        SkillData skillData = GetSkillData(eventCommonInput.inputKey);
+        if (skillData != null && IsSkillUsable(skillData.Id))
+        {
+            UseSkill(skillData);
+            PlaySkillAni(skillData.aniStateName);
+            OnSkillStart?.Invoke();
+            Debug.Log($"SkillData: {skillData.Id} - {skillData.aniStateName}");
+        }
+    }
+
+    private bool IsSkillUsable(int skillId)
+    {
+        if (_skillDataDic.TryGetValue(skillId, out SkillData skillData) == false)
+            return false;
+
+        if (_coolingSkillDic.ContainsKey(skillId))
+            return false;
+
+        //if (_currentSkill != null && _currentSkill.Id == skillData.Id)
+        //    return false;
+
+        return true;
+    }
+    private void UseSkill(SkillData skillData)
+    {
+        _currentSkill = skillData;
+        if (skillData.coolTime > 0f)
+            _coolingSkillDic.Add(skillData.Id, StartCoroutine(SkillCoolTimeRoutine(skillData)));
+    }
+    private void PlaySkillAni(string skillAni)
+    {
+        if (string.IsNullOrEmpty(skillAni) || _unit == null || UnitAnimation == null)
             return;
 
-        if(_currentSkillDic.TryGetValue(eventCommonInput.inputKey, out SkillData skillData) == false || skillData == null)
-            return;
+        UnitAnimation.PlayAni(_currentSkill.aniStateName, true, 0.1f);
+    }
+    private SkillData GetSkillData(EInputKey eInputKey)
+    {
+        if (_currentSkillDic.TryGetValue(eInputKey, out SkillData skillData) == false)
+            return null;
 
-        _unitAnimation.PlayAni(skillData.aniStateName, true, 0.1f);
-        Debug.Log($"SkillData: {skillData.Id} - {skillData.aniStateName}");
+        if (_nextSkillFlag)
+        {
+            _nextSkillFlag = false;
+            return GetNextSkill(skillData);
+        }
+
+        return skillData;
+    }
+    private SkillData GetNextSkill(SkillData skillData)
+    {
+        if (skillData.nextSkillId == 0)
+            return null;
+
+        if (_skillDataDic.TryGetValue(skillData.nextSkillId, out SkillData nextSkillData) == false)
+            return null;
+
+        if (skillData.Equals(_currentSkill))
+            return nextSkillData;
+
+        return GetNextSkill(nextSkillData);
+    }
+
+    IEnumerator SkillCoolTimeRoutine(SkillData skillData)
+    {
+        yield return new WaitForSeconds(skillData.coolTime);
+    }
+
+    public void SetNextSkillFlag()
+    {
+        _nextSkillFlag = _currentSkill != null && _currentSkill.nextSkillId != 0;
     }
 }
 

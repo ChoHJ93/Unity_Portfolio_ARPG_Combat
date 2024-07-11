@@ -2,55 +2,63 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(Animator))]
 public class Unit : MonoBehaviour
 {
     private readonly EInputKey[] CombatInputKeys = new EInputKey[] { EInputKey.Attack, EInputKey.Skill_01, EInputKey.Skill_02, EInputKey.Dash };
 
     private CharacterController _characterController;
     private UnitMovement _unitMovement;
+    private UnitSkill _unitSkill;
     private UnitAniEventController _aniEventController;
 
-    private Dictionary<EInputKey, SkillData> _skillDataDic;
+    private UnitAnimation _unitAnimation;
 
-    [SerializeField] private UnitSkillTable _unitSkillTable;
-
+    public UnitAnimation UnitAnimation => _unitAnimation;
     public UnitMovement UnitMovement => _unitMovement;
 
     private void Awake()
     {
-        _unitMovement = GetComponent<UnitMovement>();
-        _aniEventController = GetComponent<UnitAniEventController>();
+        TryGetComponent(out _characterController);
+        TryGetComponent(out _unitMovement);
+        TryGetComponent(out _unitSkill);
+        TryGetComponent(out _aniEventController);
 
-        _skillDataDic = new Dictionary<EInputKey, SkillData>();
-
-        if (_unitSkillTable != null)
+        if (TryGetComponent(out Animator animator))
         {
-
+            _unitAnimation = new UnitAnimation(this, animator);
         }
     }
 
     private void OnEnable()
     {
-
+        if(_unitSkill != null)
+        {
+            _unitSkill.OnSkillStart += OnSkillStart;
+            _unitSkill.OnSkillEnd += OnSkillEnd;
+        }
     }
 
     private void OnDisable()
     {
-
-    }
-
-    private void OnSkillInputCalled(EventCommonInput eventCommonInput)
-    {
-        switch (eventCommonInput.inputKey)
+        if(_unitSkill != null)
         {
-            case EInputKey.Attack:
-                break;
-            case EInputKey.Skill_01:
-                break;
-            case EInputKey.Skill_02:
-                break;
-            case EInputKey.Dash:
-                break;
+            _unitSkill.OnSkillStart -= OnSkillStart;
+            _unitSkill.OnSkillEnd -= OnSkillEnd;
         }
     }
+
+    private void OnSkillStart() 
+    {
+        if(_unitMovement)
+            _unitMovement.SetEnableMove(false);
+    }
+
+    private void OnSkillEnd() 
+    {
+        if(_unitMovement)
+            _unitMovement.SetEnableMove(true);
+    }
+
+    
 }

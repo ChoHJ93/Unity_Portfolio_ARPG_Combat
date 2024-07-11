@@ -19,6 +19,18 @@ public class SkillData : PropertyAttribute
     public int selectedStateIndex = 0;
     public int selectedNextSkillIndex = 0;
 #endif
+
+    public SkillData Clone() 
+    {
+        SkillData clone = new SkillData();
+        clone.Id = Id;
+        clone.aniStateName = aniStateName;
+        clone.coolTime = coolTime;
+        clone.damage = damage;
+        clone.nextSkillId = nextSkillId;
+
+        return clone;
+    }
 }
 
 //#if UNITY_EDITOR
