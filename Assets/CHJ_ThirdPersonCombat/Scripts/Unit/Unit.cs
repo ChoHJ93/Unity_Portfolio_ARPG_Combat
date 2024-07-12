@@ -10,7 +10,6 @@ public class Unit : MonoBehaviour
     private CharacterController _characterController;
     private UnitMovement _unitMovement;
     private UnitSkill _unitSkill;
-    private UnitAniEventController _aniEventController;
 
     private UnitAnimation _unitAnimation;
 
@@ -22,7 +21,6 @@ public class Unit : MonoBehaviour
         TryGetComponent(out _characterController);
         TryGetComponent(out _unitMovement);
         TryGetComponent(out _unitSkill);
-        TryGetComponent(out _aniEventController);
 
         if (TryGetComponent(out Animator animator))
         {
