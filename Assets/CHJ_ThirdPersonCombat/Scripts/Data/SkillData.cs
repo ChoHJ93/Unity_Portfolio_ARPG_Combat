@@ -14,6 +14,7 @@ public class SkillData : PropertyAttribute
     public float coolTime;
     public float damage;
     public int nextSkillId;
+    public int skillNameHash;
 
 #if UNITY_EDITOR
     public int selectedStateIndex = 0;
@@ -28,6 +29,7 @@ public class SkillData : PropertyAttribute
         clone.coolTime = coolTime;
         clone.damage = damage;
         clone.nextSkillId = nextSkillId;
+        clone.skillNameHash = skillNameHash;
 
         return clone;
     }

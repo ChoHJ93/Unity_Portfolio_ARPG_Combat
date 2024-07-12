@@ -13,7 +13,9 @@ GameObject:
   - component: {fileID: 3222167841428933030}
   - component: {fileID: 4952148407022688345}
   - component: {fileID: 8323878627355218159}
+  - component: {fileID: 6862957534919526646}
   - component: {fileID: 1197007186004629885}
+  - component: {fileID: 1675775985770888802}
   m_Layer: 6
   m_Name: UnitPlayer
   m_TagString: Untagged
@@ -110,6 +112,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _moveSpeed: 5
   _rotationSmoothTime: 0.1
+--- !u!114 &6862957534919526646
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2047931523490816685}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 785369b171114984988bf02e81c92ee4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &1197007186004629885
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -124,6 +138,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _unitSkillTable: {fileID: 11400000, guid: 9c40ad5707f73094cb8207076e67c9f0, type: 2}
   _defaultSkillIdList: 6500000000000000000000002d010000
+--- !u!114 &1675775985770888802
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2047931523490816685}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a8622d189abd2ad458aa7de36c2ee2f9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &2566231300001537248
 PrefabInstance:
   m_ObjectHideFlags: 0

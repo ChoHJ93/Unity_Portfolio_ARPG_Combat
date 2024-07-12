@@ -80,7 +80,6 @@ public class UnitSkill : MonoBehaviour
             UseSkill(skillData);
             PlaySkillAni(skillData.aniStateName);
             OnSkillStart?.Invoke();
-            Debug.Log($"SkillData: {skillData.Id} - {skillData.aniStateName}");
         }
     }
 
@@ -91,9 +90,14 @@ public class UnitSkill : MonoBehaviour
 
         if (_coolingSkillDic.ContainsKey(skillId))
             return false;
-
-        //if (_currentSkill != null && _currentSkill.Id == skillData.Id)
-        //    return false;
+        if (_currentSkill != null && _currentSkill.Id > 0)
+        {
+            if (skillId == _currentSkill.Id)
+                return false;
+            if (_nextSkillFlag && _currentSkill.nextSkillId == skillId)
+                return true;
+            return false;
+        }
 
         return true;
     }
@@ -117,7 +121,6 @@ public class UnitSkill : MonoBehaviour
 
         if (_nextSkillFlag)
         {
-            _nextSkillFlag = false;
             return GetNextSkill(skillData);
         }
 
@@ -142,6 +145,19 @@ public class UnitSkill : MonoBehaviour
         yield return new WaitForSeconds(skillData.coolTime);
     }
 
+    public void EndCurrentSkill(int stateNameHash)
+    {
+        if (_currentSkill == null)
+            return;
+        if (_currentSkill.skillNameHash == stateNameHash)
+        {
+            Debug.Log($"SkillEnd : {_currentSkill.aniStateName}");
+            _currentSkill = null;
+            _nextSkillFlag = false;
+            OnSkillEnd?.Invoke();
+            //Debug.Log($"Data State Name Hash : {_currentSkill.skillNameHash} / Ani State Name Hash : {stateNameHash}");
+        }
+    }
     public void SetNextSkillFlag()
     {
         _nextSkillFlag = _currentSkill != null && _currentSkill.nextSkillId != 0;

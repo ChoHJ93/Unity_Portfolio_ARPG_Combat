@@ -110,6 +110,7 @@ public class UnitSkillTableEditor : Editor
         var coolTimeProp = skillDataProp.FindPropertyRelative("coolTime");
         var damageProp = skillDataProp.FindPropertyRelative("damage");
         var nextSkillIdProp = skillDataProp.FindPropertyRelative("nextSkillId");
+        var skillNameHashProp = skillDataProp.FindPropertyRelative("skillNameHash");
 
         var selectedStateIndex = skillDataProp.FindPropertyRelative("selectedStateIndex");
         var selectedNextSkillIndex = skillDataProp.FindPropertyRelative("selectedNextSkillIndex");
@@ -124,8 +125,14 @@ public class UnitSkillTableEditor : Editor
         Rect nextSkillIdRect = new Rect(damageRect.x + width + padding, rect.y, width, rect.height);
 
         EditorGUI.PropertyField(skillIdRect, skillIdProp, GUIContent.none);
+        EditorGUI.BeginChangeCheck();
         selectedStateIndex.intValue = EditorGUI.Popup(aniStateNameRect, selectedStateIndex.intValue, _aniStateArray);
         aniStateNameProp.stringValue = _aniStateArray[selectedStateIndex.intValue];
+        if (EditorGUI.EndChangeCheck())
+        {
+            skillNameHashProp.intValue = Animator.StringToHash(aniStateNameProp.stringValue);
+        }
+
         EditorGUI.PropertyField(coolTimeRect, coolTimeProp, GUIContent.none);
         EditorGUI.PropertyField(damageRect, damageProp, GUIContent.none);
         EditorGUI.PropertyField(nextSkillIdRect, nextSkillIdProp, GUIContent.none);

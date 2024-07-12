@@ -505,6 +505,10 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: 5f415d2f-7518-4dc7-bff0-c725fc7934cb
     m_ActionName: UI_Actions/UI_Interaction[/Keyboard/f]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 1c04445c-4449-4a32-863b-0be8074bc098
+    m_ActionName: PlayerActions/Dash[/Keyboard/space]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: PlayerActions

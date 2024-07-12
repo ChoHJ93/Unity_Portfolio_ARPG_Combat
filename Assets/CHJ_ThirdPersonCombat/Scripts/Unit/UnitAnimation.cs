@@ -1,8 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using CHJ.SimpleAniEventTool;
+using UnityEngine.Events;
 
-public class UnitAnimation
+[RequireComponent(typeof(Unit))]
+[RequireComponent(typeof(Animator))]
+public class UnitAnimation : MonoBehaviour
 {
     private Unit _unit;
     private Animator _animator;
@@ -11,10 +15,24 @@ public class UnitAnimation
     private float _moveInputValue = 0f;
     private float _moveAniBlendVelocity = 0f;
 
-    public UnitAnimation(Unit unit, Animator animator)
+    private int lastStateHash = 0;
+
+    public event UnityAction<int> OnAniStateStart;
+    public event UnityAction<int> OnAniStateEnd;
+
+    private void Awake()
     {
-        _unit = unit;
-        _animator = animator;
+        _unit = GetComponent<Unit>();
+        TryGetComponent(out _animator);
+    }
+
+    public void OnAniStateEnter(int stateNameHash)
+    {
+        OnAniStateStart?.Invoke(stateNameHash);
+    }
+    public void OnAniStateExit(int stateNameHash)
+    {
+        OnAniStateEnd?.Invoke(stateNameHash);
     }
 
     public void SetMoveAnimation(Vector2 moveInput, bool forcePlay = false)
@@ -42,11 +60,13 @@ public class UnitAnimation
         _lastMoveInput = isMoving;
     }
 
-    public void PlayAni(string aniStateName, bool crossFade = false, float transitionDuration = 0.1f) 
+    public void PlayAni(string aniStateName, bool crossFade = false, float transitionDuration = 0.1f)
     {
         if (crossFade)
             _animator.CrossFade(aniStateName, transitionDuration);
         else
             _animator.Play(aniStateName);
     }
+
+
 }

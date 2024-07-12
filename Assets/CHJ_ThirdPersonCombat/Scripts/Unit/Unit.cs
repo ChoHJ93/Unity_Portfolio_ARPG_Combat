@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(Animator))]
 public class Unit : MonoBehaviour
 {
     private readonly EInputKey[] CombatInputKeys = new EInputKey[] { EInputKey.Attack, EInputKey.Skill_01, EInputKey.Skill_02, EInputKey.Dash };
@@ -15,48 +14,50 @@ public class Unit : MonoBehaviour
 
     public UnitAnimation UnitAnimation => _unitAnimation;
     public UnitMovement UnitMovement => _unitMovement;
+    public UnitSkill UnitSkill => _unitSkill;
 
     private void Awake()
     {
         TryGetComponent(out _characterController);
         TryGetComponent(out _unitMovement);
+        TryGetComponent(out _unitAnimation);
         TryGetComponent(out _unitSkill);
-
-        if (TryGetComponent(out Animator animator))
-        {
-            _unitAnimation = new UnitAnimation(this, animator);
-        }
     }
 
     private void OnEnable()
     {
-        if(_unitSkill != null)
+        if (_unitSkill != null)
         {
             _unitSkill.OnSkillStart += OnSkillStart;
             _unitSkill.OnSkillEnd += OnSkillEnd;
+
+            if (_unitAnimation != null)
+                _unitAnimation.OnAniStateEnd += _unitSkill.EndCurrentSkill;
         }
     }
 
     private void OnDisable()
     {
-        if(_unitSkill != null)
+        if (_unitSkill != null)
         {
             _unitSkill.OnSkillStart -= OnSkillStart;
             _unitSkill.OnSkillEnd -= OnSkillEnd;
+
+            if (_unitAnimation != null)
+                _unitAnimation.OnAniStateEnd -= _unitSkill.EndCurrentSkill;
         }
     }
 
-    private void OnSkillStart() 
+    private void OnSkillStart()
     {
-        if(_unitMovement)
+        if (_unitMovement)
             _unitMovement.SetEnableMove(false);
     }
 
-    private void OnSkillEnd() 
+    private void OnSkillEnd()
     {
-        if(_unitMovement)
+        if (_unitMovement)
             _unitMovement.SetEnableMove(true);
     }
 
-    
 }

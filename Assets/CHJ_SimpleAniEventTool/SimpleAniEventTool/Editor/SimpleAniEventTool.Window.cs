@@ -290,7 +290,7 @@ namespace CHJ.SimpleAniEventTool
             m_SimulateInfoList?.Clear();
             m_ClipFiles?.Clear();
             m_ClipNames?.Clear();
-            m_SelectedClipIndex = 0;
+            //m_SelectedClipIndex = 0;
             m_Clip = null;
             m_clipEvents?.Clear();
             m_ClipEventList = null;
@@ -325,6 +325,9 @@ namespace CHJ.SimpleAniEventTool
         private void OnDestroy()
         {
             Clear();
+
+            if (m_PrefabOrigin != null)
+                m_PrefabOrigin.SetActive(true);
         }
         #region GUI Methods
         private void OnGUI()
@@ -352,7 +355,24 @@ namespace CHJ.SimpleAniEventTool
             {
                 EditorGUI.BeginDisabledGroup(Application.isPlaying);
                 EditorGUILayout.LabelField("Target Object", GUILayout.Width(100));
-                m_PrefabOrigin = EditorGUILayout.ObjectField(m_PrefabOrigin, typeof(GameObject), true) as GameObject;
+                if (m_PrefabOrigin == null)
+                {
+                    SimpleAniEvent aniEventObj = EditorGUILayout.ObjectField(m_PrefabOrigin, typeof(SimpleAniEvent), true) as SimpleAniEvent;
+                    m_PrefabOrigin = aniEventObj?.gameObject;
+                }
+                else
+                {
+                    EditorGUI.BeginDisabledGroup(true);
+                    m_PrefabOrigin = EditorGUILayout.ObjectField(m_PrefabOrigin, typeof(GameObject), false) as GameObject;
+                    EditorGUI.EndDisabledGroup();
+                    Rect rect = GUILayoutUtility.GetLastRect();
+                    if (GUI.Button(new Rect(rect.x + rect.width - 20, rect.y, 20, rect.height), "X"))
+                    {
+                        Clear();
+                        m_PrefabOrigin.SetActive(true);
+                        m_PrefabOrigin = null;
+                    }
+                }
                 EditorGUI.EndDisabledGroup();
 
                 EditorGUI.BeginDisabledGroup(true);
@@ -411,6 +431,7 @@ namespace CHJ.SimpleAniEventTool
                 if (EditorGUI.EndChangeCheck())
                 {
                     m_Clip = m_ClipFiles[m_SelectedClipIndex];
+                    SetAniClipEvents(m_Clip, ref m_clipEvents);
                     isPlaying = false;
                     currentTime = 0;
                 }
@@ -594,7 +615,6 @@ namespace CHJ.SimpleAniEventTool
             if (m_PrefabOrigin == null || m_PrefabInstance == null)
                 return;
 
-            InitVariables();
             if (m_PrefabInstance.GetComponent<Animator>() != null)
             {
                 Animator animator = m_PrefabInstance.GetComponent<Animator>();
@@ -620,15 +640,20 @@ namespace CHJ.SimpleAniEventTool
             if (m_PrefabInstance.TryGetComponent(out SimpleAniEvent component) == false)
             {
                 m_PrefabInstance.AddComponent<SimpleAniEvent>();
+                component = m_PrefabInstance.GetComponent<SimpleAniEvent>();
             }
 
             //get all public methods of the SimpleAniEvent class or SimpleAniEvent's child class and add them to the m_FunctionNames list
             m_SimpleAniEventType = component.GetType();
             m_FunctionDatas = new List<(string, EventParmType)>();
             m_FunctionDatas.Add(("None", EventParmType.None));
-            MethodInfo[] methods = m_SimpleAniEventType.GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+
+            MethodInfo[] methods = GetAniEventMethods(m_SimpleAniEventType);//m_SimpleAniEventType.GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
             foreach (var method in methods)
             {
+                if (method.GetParameters().Length > 1)
+                    continue;
+
                 if (IsChildObjectTypeMethod(method.Name))
                 {
                     m_FunctionDatas.Add((method.Name, EventParmType.ChildObject));
@@ -641,20 +666,7 @@ namespace CHJ.SimpleAniEventTool
             if (m_ClipFiles.Count > 0)
             {
                 m_Clip = m_ClipFiles[m_SelectedClipIndex];
-                foreach (var clipEvent in m_Clip.events)
-                {
-                    AniClipEvent aniClipEvent = new AniClipEvent();
-                    aniClipEvent.functionIndex = m_FunctionNames.Exists(x => x == clipEvent.functionName) ? m_FunctionNames.IndexOf(clipEvent.functionName) : 0;
-                    aniClipEvent.functionName = clipEvent.functionName;
-                    aniClipEvent.time = clipEvent.time;
-                    aniClipEvent.floatParameter = clipEvent.floatParameter;
-                    aniClipEvent.intParameter = clipEvent.intParameter;
-                    aniClipEvent.objectReferenceParameter = clipEvent.objectReferenceParameter;
-                    aniClipEvent.stringParameter = clipEvent.stringParameter;
-
-                    m_clipEvents.Add(aniClipEvent);
-                }
-
+                SetAniClipEvents(m_Clip, ref m_clipEvents);
                 foreach (var clip in m_ClipFiles)
                 {
                     m_ClipNames.Add(clip.name);
@@ -829,6 +841,32 @@ namespace CHJ.SimpleAniEventTool
         #endregion
 
         #region Utility
+        private MethodInfo[] GetAniEventMethods(Type simpleAniEventType)
+        {
+            //get all public methods of the SimpleAniEvent class or SimpleAniEvent's child class and add them to the m_FunctionNames list
+            List<MethodInfo> methods = new List<MethodInfo>();
+
+            MethodInfo[] allMethods = simpleAniEventType.GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+            foreach (var method in allMethods)
+            {
+                if (method.GetParameters().Length > 1)
+                    continue;
+
+                if (IsChildObjectTypeMethod(method.Name))
+                {
+                    methods.Add(method);
+                    continue;
+                }
+
+                methods.Add(method);
+            }
+            if (simpleAniEventType != typeof(SimpleAniEvent))
+            {
+                methods.AddRange(GetAniEventMethods(simpleAniEventType.BaseType));
+            }
+
+            return methods.ToArray();
+        }
         private EventParmType GetEventParmType(MethodInfo methodInfo)
         {
             ParameterInfo[] parameters = methodInfo.GetParameters();
@@ -870,6 +908,23 @@ namespace CHJ.SimpleAniEventTool
             }
 
             return childObjects;
+        }
+        private void SetAniClipEvents(AnimationClip clip, ref List<AniClipEvent> aniClipEvents)
+        {
+            aniClipEvents.Clear();
+            foreach (var aniEvent in clip.events)
+            {
+                AniClipEvent aniClipEvent = new AniClipEvent();
+                aniClipEvent.functionIndex = m_FunctionNames.Exists(x => x == aniEvent.functionName) ? m_FunctionNames.IndexOf(aniEvent.functionName) : 0;
+                aniClipEvent.functionName = aniEvent.functionName;
+                aniClipEvent.time = aniEvent.time;
+                aniClipEvent.floatParameter = aniEvent.floatParameter;
+                aniClipEvent.intParameter = aniEvent.intParameter;
+                aniClipEvent.objectReferenceParameter = aniEvent.objectReferenceParameter;
+                aniClipEvent.stringParameter = aniEvent.stringParameter;
+
+                aniClipEvents.Add(aniClipEvent);
+            }
         }
 
         private List<ParticleSimulateInfo> GetAllParticleSimulateInfos(GameObject prefabInstance)
